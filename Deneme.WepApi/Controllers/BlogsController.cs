@@ -33,13 +33,13 @@ namespace Deneme.WepApi.Controllers
         public BlogsController(IAppBaseRepository _AppRepo)
         {
             AppRepo = _AppRepo;
-            UserID = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+          
         }
         [HttpGet]
-        [Authorize(Roles ="Admin")]//bu bölüm enumtype olarak kullanılabilir
+        [Authorize(Roles ="Admin")]//bu bölüm enumtype olarak kullanılabilir rol bazlı autantication
         public IActionResult Get()
         {
-            var a = UserID;
+            var a = UserID= User.FindFirst(ClaimTypes.NameIdentifier).Value;
             //Include Yapının çalışması için Microsoft.AspNetCore.Mvc.NewtonsoftJson Pakedi Yüklenmli ve starup 60 . satırdaki kod eklenmöeli
             var blogs = AppRepo.GetNonDeleted<BlogClass>(t=>t.ObjectStatus==ObjectStatus.NonDeleted);
             var b= blogs.Include(t=>t.Categori);
