@@ -57,6 +57,8 @@ namespace Deneme.WepApi
 
 
             services.AddTransient<IAppBaseRepository, AppBaseRepository>();
+            services.AddTransient<IBlogRepository, BlogRepository>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );

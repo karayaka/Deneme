@@ -29,10 +29,14 @@ namespace Deneme.WepApi.Controllers
        
        
         public readonly IAppBaseRepository AppRepo;
+        public readonly IBlogRepository BlogRepo;
+        public readonly IUnitOfWork unitOfWork;
         private  string UserID;
-        public BlogsController(IAppBaseRepository _AppRepo)
+        public BlogsController(IAppBaseRepository _AppRepo, IBlogRepository _BlogRepo, IUnitOfWork _unitOfWork)
         {
             AppRepo = _AppRepo;
+            BlogRepo = _BlogRepo;
+            unitOfWork = _unitOfWork;
           
         }
         [HttpGet]
@@ -79,7 +83,7 @@ namespace Deneme.WepApi.Controllers
         public IActionResult SaveCategori(CategoriCreateModel categori)
         {
 
-
+            
             var model = new BlogCategoriDefination()
             {
                 CategoriDesc= categori.CategoriDesc,
@@ -88,8 +92,28 @@ namespace Deneme.WepApi.Controllers
                 CreatedBy = 1,                
                 LastUpdateBy = 1,
             };
-            AppRepo.Add(model);           
+            AppRepo.Add(model);
+            BlogRepo.GetFiveBlog();
             return Ok(model);
+        }
+
+        public IActionResult CreateWor()
+        {
+            //Bu Yapı İle Bütün Repositoriler Tek bir Contex Kullanması Sağlandı Ve Bu Sayede Contex NEsnesi VCerimli Ve Hizli Çalışır Hale Geldi!!
+            var blog = new BlogClass() 
+            {
+                BlogContext="",
+                BlogTitle="",
+                CategoriID=1,
+                CreatedBy=1,
+                LastUpdateBy=1,
+                PublishDate=DateTime.UtcNow,
+                
+            };
+            unitOfWork.BlogRepository.Add<BlogClass>(blog);
+            unitOfWork.SaveChange();
+            unitOfWork.BlogRepository.GetFiveBlog();
+            return Ok();
         }
 
     }
