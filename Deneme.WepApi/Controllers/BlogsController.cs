@@ -31,19 +31,20 @@ namespace Deneme.WepApi.Controllers
         public readonly IAppBaseRepository AppRepo;
         public readonly IBlogRepository BlogRepo;
         public readonly IUnitOfWork unitOfWork;
-        private  string UserID;
-        public BlogsController(IAppBaseRepository _AppRepo, IBlogRepository _BlogRepo, IUnitOfWork _unitOfWork)
+        private  string UserName;
+        public BlogsController(IAppBaseRepository _AppRepo, IBlogRepository _BlogRepo, IUnitOfWork _unitOfWork, IHttpContextAccessor contextAccessor)
         {
             AppRepo = _AppRepo;
             BlogRepo = _BlogRepo;
             unitOfWork = _unitOfWork;
-          
+            UserName= contextAccessor.HttpContext.User.FindFirst("UserJSON").Value;
         }
         [HttpGet]
         [Authorize(Roles ="Admin")]//bu bölüm enumtype olarak kullanılabilir rol bazlı autantication
         public IActionResult Get()
         {
-            var a = UserID= User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            
+           var UserID= User.FindFirst(ClaimTypes.NameIdentifier).Value;
             //Include Yapının çalışması için Microsoft.AspNetCore.Mvc.NewtonsoftJson Pakedi Yüklenmli ve starup 60 . satırdaki kod eklenmöeli
             var blogs = AppRepo.GetNonDeleted<BlogClass>(t=>t.ObjectStatus==ObjectStatus.NonDeleted);
             var b= blogs.Include(t=>t.Categori);

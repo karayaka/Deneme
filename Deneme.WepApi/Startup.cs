@@ -54,8 +54,8 @@ namespace Deneme.WepApi
                 };
 
             });
-
-
+            //httpaccesor e consractor den eriþmek için gerekli kod
+            services.AddHttpContextAccessor();
             services.AddTransient<IAppBaseRepository, AppBaseRepository>();
             services.AddTransient<IBlogRepository, BlogRepository>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
